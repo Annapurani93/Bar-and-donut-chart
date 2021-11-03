@@ -33,10 +33,9 @@ share%>%
   head(10)->share2
 
 #column chart of the top 10 languages based on total speakers
-
 ggplot(share2,aes(x=Total,y=reorder(Language,Total,decreasing=TRUE),label=paste(Total,"million")))+
-         geom_col(fill="#71b7ec",colour="white")+
-  geom_text(colour="black",hjust=1.2,fontface="bold")+
+         geom_col(fill="#71b7ec",colour="white",width=0.3)+
+  geom_text(colour="black",size=4,hjust=1.2,fontface="bold")+
   theme(axis.text.y=element_text(color="white", size=12, hjust=.5, face = "bold"),
         axis.text.x=element_blank(),
         axis.title=element_blank(),
@@ -57,17 +56,17 @@ ggplot(share2,aes(x=Total,y=reorder(Language,Total,decreasing=TRUE),label=paste(
 library(reshape2)
 melt(share1,id.vars = "Language",measure.vars = c("NativeP","NonNativeP"),value.name = "value") ->share3      
 
+hsize=3
 
 share3%>%
   mutate(hsize=3)->share3
-hsize=3
 
 share3%>%
   mutate(Language=fct_relevel(Language,levels="English","Mandarin Chinese","Hindi",
                               "Spanish","French","Standard Arabic","Bengali",
                               "Russian","Portuguese","Indonesian"))->share3
 
-#donut chart of the share of native and non-native speakers
+#donut chart to show the share of native and non-native speakers
 ggplot(share3,aes(x=hsize,y=value,fill=variable))+
   geom_col(colour="white",alpha=1)+
   scale_fill_manual(values=c("#00b7b7","#ea8282"),labels=c("Native Speakers","Non-native Speakers"))+
@@ -99,6 +98,14 @@ ggplot(share3,aes(x=hsize,y=value,fill=variable))+
 
 
 chart1+chart3->chart2
+chart2+
+  theme(
+    plot.background = element_rect(fill="black",colour=NA),
+    panel.background = element_rect(fill="black",colour = NA),
+    plot.margin=margin(t=15,r=20,b=15,l=20)
+  )->chart2
 ggsave("chart2.png",chart2,width = 21,height=10,dpi=600)
+
+
 
 
